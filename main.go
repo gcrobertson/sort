@@ -17,7 +17,7 @@ import (
 //Command line arguments
 var (
 	size          = flag.Int("size", 0, "data size of random integer array to be sorted.")
-	sorts *string = flag.String("sort", "", "sort method. available options: bubble, selection, sinking")
+	sorts *string = flag.String("sorts", "", "sort method. available options: bubble, selection, sinking")
 )
 
 //Sorting algorithms
@@ -64,30 +64,54 @@ func initializeIntSlice() []int {
 
 //SortInfo ...
 type SortInfo struct {
-	AlgorithmName string
-	PreSort       []int
-	PostSort      []int
+	AlgorithmName  string
+	UntouchedCopy  []int
+	ArgumentToFunc []int
+	OrderedSlice   []int
 }
+
+//SortInfoSlice ...
+var SortInfoSlice []SortInfo
 
 func main() {
 
 	parseCLI()
 	validateCLISize()
 	validateCLISorts()
+	setupSortInfoSlice()
 
-	prexi := initializeIntSlice()
+	fmt.Printf("contents of the SortInfoSlice: [%+v]\n", SortInfoSlice)
+}
 
-	bubbleSort := SortInfo{
-		AlgorithmName: "BubbleSort",
+func setupSortInfoSlice() {
+
+	originalSlice := initializeIntSlice()
+
+	for k := range sortMap {
+
+		if sortMap[k] == true {
+
+			nSortInfo := SortInfo{
+				AlgorithmName: k, // set up name from map key
+			}
+
+			nSortInfo.UntouchedCopy = make([]int, len(originalSlice))
+			nSortInfo.ArgumentToFunc = make([]int, len(originalSlice))
+
+			copy(nSortInfo.UntouchedCopy, originalSlice)
+			copy(nSortInfo.ArgumentToFunc, originalSlice)
+
+			SortInfoSlice = append(SortInfoSlice, nSortInfo)
+		}
 	}
+}
 
-	// bubbleSort.PreSort = prexi[:]
+func run() {
 
-	// copy(bubbleSort.PreSort, prexi)
+	// bubbleSort.OrderedSlice = algorithms.Bubble(bubbleSort.ArgumentToFunc)
 
-	// bubbleSort.PostSort = algorithms.Bubble(prexi)
+	// fmt.Printf("Original list: [%+v]\n", prexi)
+	// fmt.Printf("Bubble Sort presorted: [%+v]\n", bubbleSort.ArgumentToFunc)
+	// fmt.Printf("Bubble Sort postsorted: [%+v]\n", bubbleSort.OrderedSlice)
 
-	fmt.Printf("Original list: [%+v]\n", prexi)
-	fmt.Printf("Bubble Sort presorted: [%+v]\n", bubbleSort.PreSort)
-	fmt.Printf("Bubble Sort postsorted: [%+v]\n", bubbleSort.PostSort)
 }
