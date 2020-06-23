@@ -12,6 +12,8 @@ import (
 	"math/rand"
 	"strings"
 	"time"
+
+	algorithms "github.com/sort/algorithms/bubble"
 )
 
 //Command line arguments
@@ -80,7 +82,12 @@ func main() {
 	validateCLISorts()
 	setupSortInfoSlice()
 
-	fmt.Printf("contents of the SortInfoSlice: [%+v]\n", SortInfoSlice)
+	run()
+
+	for k, v := range SortInfoSlice {
+		fmt.Printf("contents of the SortInfoSlice index [%d]: [%+v]\n", k, v)
+	}
+
 }
 
 func setupSortInfoSlice() {
@@ -98,7 +105,7 @@ func setupSortInfoSlice() {
 			nSortInfo.UntouchedCopy = make([]int, len(originalSlice))
 			nSortInfo.ArgumentToFunc = make([]int, len(originalSlice))
 
-			copy(nSortInfo.UntouchedCopy, originalSlice)
+			copy(nSortInfo.UntouchedCopy, originalSlice) // Probably unnecessary to hold onto this but for now it's okay
 			copy(nSortInfo.ArgumentToFunc, originalSlice)
 
 			SortInfoSlice = append(SortInfoSlice, nSortInfo)
@@ -108,10 +115,12 @@ func setupSortInfoSlice() {
 
 func run() {
 
-	// bubbleSort.OrderedSlice = algorithms.Bubble(bubbleSort.ArgumentToFunc)
+	// Run sequentially first before trying to add concurrency
+	for k, v := range SortInfoSlice {
 
-	// fmt.Printf("Original list: [%+v]\n", prexi)
-	// fmt.Printf("Bubble Sort presorted: [%+v]\n", bubbleSort.ArgumentToFunc)
-	// fmt.Printf("Bubble Sort postsorted: [%+v]\n", bubbleSort.OrderedSlice)
-
+		// How best to map a string "bubble" to the correct algorithm?
+		// It should be stored in the slice I guess? Or maybe on initialization
+		// I do not need the hash map to turn to bool... not sure.
+		SortInfoSlice[k].OrderedSlice = algorithms.Bubble(v.ArgumentToFunc)
+	}
 }
