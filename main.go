@@ -88,7 +88,13 @@ func main() {
 	validateCLISorts()
 	setupSortInfoSlice()
 
-	run()
+	// maybe run should take a *SortInfo
+
+	// log the begin time end time to SortInfo struct?
+	// run as a go routine?
+	for k := range SortInfoSlice {
+		run(&SortInfoSlice[k])
+	}
 
 	for k, v := range SortInfoSlice {
 		fmt.Printf("contents of the SortInfoSlice index [%d]: [%+v]\n", k, v)
@@ -119,25 +125,14 @@ func setupSortInfoSlice() {
 	}
 }
 
-func run() {
+func run(v *SortInfo) {
 
-	// Run sequentially first before trying to add concurrency
-	for k, v := range SortInfoSlice {
-
-		switch v.AlgorithmName {
-		case "bubble":
-			SortInfoSlice[k].OrderedSlice = algorithms.Bubble(v.ArgumentToFunc)
-		case "counting":
-			SortInfoSlice[k].OrderedSlice = algorithms2.Counting(v.ArgumentToFunc)
-		case "merge":
-			SortInfoSlice[k].OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
-		}
-
-		// How best to map a string "bubble" to the correct algorithm?
-		// It should be stored in the slice I guess? Or maybe on initialization
-		// I do not need the hash map to turn to bool... not sure.
-
-		// maybe run should be called multiple times out of fairness...
-
+	switch v.AlgorithmName {
+	case "bubble":
+		v.OrderedSlice = algorithms.Bubble(v.ArgumentToFunc)
+	case "counting":
+		v.OrderedSlice = algorithms2.Counting(v.ArgumentToFunc)
+	case "merge":
+		v.OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
 	}
 }
