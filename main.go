@@ -21,33 +21,33 @@ var (
 )
 
 //Sorting algorithms
-var algorithms = map[string]bool{
+var sortMap = map[string]bool{
 	"bubble":   false,
 	"counting": false,
 	"merge":    false,
 }
 
+// retrieve command line arguments
 func parseCLI() {
 
-	// retrieve command line arguments
 	flag.Parse()
 }
 
+// validate command line argument for size
 func validateCLISize() {
 
-	// validate command line argument for size
 	if 1 > *size || *size > 100000 {
 		*size = 5
 	}
 }
 
+// validate command line argument for sort. this sets the hash map to `true`
 func validateCLISorts() {
 
-	// validate command line argument for sort. this sets the hash map to `true`
 	s := strings.Split(*sorts, ",")
 	for sort := range s {
-		if _, ok := algorithms[s[sort]]; ok {
-			algorithms[s[sort]] = true
+		if _, ok := sortMap[s[sort]]; ok {
+			sortMap[s[sort]] = true
 		}
 	}
 }
@@ -62,17 +62,32 @@ func initializeIntSlice() []int {
 	return slice
 }
 
+//SortInfo ...
+type SortInfo struct {
+	AlgorithmName string
+	PreSort       []int
+	PostSort      []int
+}
+
 func main() {
 
 	parseCLI()
 	validateCLISize()
 	validateCLISorts()
 
-	xi := initializeIntSlice()
+	prexi := initializeIntSlice()
 
-	fmt.Printf("I should run these numbers through! [%+v]\n", xi)
+	bubbleSort := SortInfo{
+		AlgorithmName: "BubbleSort",
+	}
 
-	// step 1: just run the algorithm for any of the sorts...
+	// bubbleSort.PreSort = prexi[:]
 
-	// run()
+	// copy(bubbleSort.PreSort, prexi)
+
+	// bubbleSort.PostSort = algorithms.Bubble(prexi)
+
+	fmt.Printf("Original list: [%+v]\n", prexi)
+	fmt.Printf("Bubble Sort presorted: [%+v]\n", bubbleSort.PreSort)
+	fmt.Printf("Bubble Sort postsorted: [%+v]\n", bubbleSort.PostSort)
 }
