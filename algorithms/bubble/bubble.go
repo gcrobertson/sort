@@ -1,5 +1,7 @@
 package algorithms
 
+import "fmt"
+
 // var xi = []int{53, 12, 1024, 35} // ,  101, 11
 
 // func presort() {
@@ -21,6 +23,9 @@ package algorithms
 
 //Bubble ...
 func Bubble(xi []int) []int {
+
+	fmt.Println("Inside Bubble...")
+
 	for i := 0; i < len(xi); i++ {
 		for j := 0; j < len(xi)-i-1; j++ {
 			// fmt.Printf("outer loop index [%v] inner loop comparison: %v > %v?\n", i, xi[j], xi[j+1])

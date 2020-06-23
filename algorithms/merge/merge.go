@@ -1,20 +1,22 @@
+package algorithms
+
+import "fmt"
+
 // Merge Sort in Golang
-package main
 
-import (
-	"fmt"
-)
+// func main() {
+// 	//slice := numbers.GenerateSlice(20)
 
-func main() {
-	//slice := numbers.GenerateSlice(20)
+// 	slice := []int{5, 4, 3, 2, 1, 0}
 
-	slice := []int{5, 4, 3, 2, 1, 0}
+// 	fmt.Println("\n--- Unsorted --- \n\n", slice)
+// 	fmt.Println("\n--- Sorted ---\n\n", mergeSort(slice))
+// }
 
-	fmt.Println("\n--- Unsorted --- \n\n", slice)
-	fmt.Println("\n--- Sorted ---\n\n", mergeSort(slice))
-}
+// MergeSort ...
+func MergeSort(xi []int) []int {
 
-func mergeSort(xi []int) []int {
+	fmt.Println("Inside Merge...")
 
 	// avoid stack overflow from recursion
 	if len(xi) == 1 {
@@ -28,7 +30,7 @@ func mergeSort(xi []int) []int {
 		right = xi[mid:]
 	)
 
-	return mergeSortMerge(mergeSort(left), mergeSort(right))
+	return mergeSortMerge(MergeSort(left), MergeSort(right))
 }
 
 func mergeSortMerge(left, right []int) (result []int) {

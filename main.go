@@ -13,7 +13,13 @@ import (
 	"strings"
 	"time"
 
+	// fix with go module
+
 	algorithms "github.com/sort/algorithms/bubble"
+
+	algorithms2 "github.com/sort/algorithms/counting"
+
+	algorithms3 "github.com/sort/algorithms/merge"
 )
 
 //Command line arguments
@@ -118,9 +124,20 @@ func run() {
 	// Run sequentially first before trying to add concurrency
 	for k, v := range SortInfoSlice {
 
+		switch v.AlgorithmName {
+		case "bubble":
+			SortInfoSlice[k].OrderedSlice = algorithms.Bubble(v.ArgumentToFunc)
+		case "counting":
+			SortInfoSlice[k].OrderedSlice = algorithms2.Counting(v.ArgumentToFunc)
+		case "merge":
+			SortInfoSlice[k].OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
+		}
+
 		// How best to map a string "bubble" to the correct algorithm?
 		// It should be stored in the slice I guess? Or maybe on initialization
 		// I do not need the hash map to turn to bool... not sure.
-		SortInfoSlice[k].OrderedSlice = algorithms.Bubble(v.ArgumentToFunc)
+
+		// maybe run should be called multiple times out of fairness...
+
 	}
 }

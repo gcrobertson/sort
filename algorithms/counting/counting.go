@@ -1,19 +1,19 @@
-package main
+package algorithms
 
 import (
 	"fmt"
 	"math"
 )
 
-var xi = []int{-100, 156, 1, 4, 1, 2, -6, 7, 5, 2}
+// var xi = []int{-100, 156, 1, 4, 1, 2, -6, 7, 5, 2}
 
-func presort() {
-	fmt.Printf("Presort\t:%v\n", xi)
-}
+// func presort() {
+// 	fmt.Printf("Presort\t:%v\n", xi)
+// }
 
-func postsort() {
-	fmt.Printf("Sorted\t:%v\n", xi)
-}
+// func postsort() {
+// 	fmt.Printf("Sorted\t:%v\n", xi)
+// }
 
 func maxMin(xi []int) (max int, min int) {
 	max, min = xi[0], xi[0]
@@ -30,21 +30,23 @@ func maxMin(xi []int) (max int, min int) {
 /*
  *
  */
-func main() {
-	presort()
-	xi = counting(xi)
-	postsort()
-}
+// func main() {
+// 	presort()
+// 	xi = counting(xi)
+// 	postsort()
+// }
 
-/*	counting sort handles negative numbers by offsetting minimum value to 0 index
+/*Counting sort handles negative numbers by offsetting minimum value to 0 index
  *
  */
-func counting(xi []int) []int {
+func Counting(xi []int) []int {
+
+	fmt.Println("Inside Counting...")
 
 	max, min := maxMin(xi)
 	r := max - min + 1
 
-	fmt.Printf("max: [%v] min: [%v] range: [%v]\n", max, min, r)
+	// fmt.Printf("max: [%v] min: [%v] range: [%v]\n", max, min, r)
 
 	// 1 key for every int value in range, 0 indexed
 	var indexSlice = make([]int, r, r)
