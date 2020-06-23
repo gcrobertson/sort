@@ -76,6 +76,8 @@ type SortInfo struct {
 	UntouchedCopy  []int
 	ArgumentToFunc []int
 	OrderedSlice   []int
+	StartTime      time.Time
+	SortDuration   time.Duration
 }
 
 //SortInfoSlice ...
@@ -89,15 +91,21 @@ func main() {
 	setupSortInfoSlice()
 
 	// maybe run should take a *SortInfo
-
 	// log the begin time end time to SortInfo struct?
 	// run as a go routine?
+
 	for k := range SortInfoSlice {
+
+		SortInfoSlice[k].StartTime = time.Now()
+
 		run(&SortInfoSlice[k])
+
+		SortInfoSlice[k].SortDuration = time.Since(SortInfoSlice[k].StartTime)
 	}
 
 	for k, v := range SortInfoSlice {
-		fmt.Printf("contents of the SortInfoSlice index [%d]: [%+v]\n", k, v)
+		// fmt.Printf("contents of the SortInfoSlice index [%d]: [%+v]\n", k, v)
+		fmt.Printf("sort [%s]: took [%+v] much time\n", v.AlgorithmName, SortInfoSlice[k].SortDuration)
 	}
 
 }

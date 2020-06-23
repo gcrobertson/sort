@@ -1,7 +1,5 @@
 package algorithms
 
-import "fmt"
-
 // Merge Sort in Golang
 
 // func main() {
@@ -16,7 +14,7 @@ import "fmt"
 // MergeSort ...
 func MergeSort(xi []int) []int {
 
-	fmt.Println("Inside Merge...")
+	// fmt.Println("Inside Merge...")
 
 	// avoid stack overflow from recursion
 	if len(xi) == 1 {
