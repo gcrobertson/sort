@@ -20,6 +20,8 @@ import (
 	algorithms3 "github.com/sort/algorithms/merge"
 
 	algorithms4 "github.com/sort/algorithms/quick"
+
+	algorithms5 "github.com/sort/algorithms/heap"
 )
 
 //Command line arguments
@@ -32,6 +34,7 @@ var (
 var sortMap = map[string]bool{
 	"bubble":   false,
 	"counting": false,
+	"heap":     false,
 	"merge":    false,
 	"quick":    false,
 }
@@ -151,6 +154,8 @@ func run(v *SortInfo, semaphore chan bool) {
 		v.OrderedSlice = algorithms.Bubble(v.ArgumentToFunc)
 	case "counting":
 		v.OrderedSlice = algorithms2.Counting(v.ArgumentToFunc)
+	case "heap":
+		v.OrderedSlice = algorithms5.HeapSort(v.ArgumentToFunc)
 	case "merge":
 		v.OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
 	case "quick":
