@@ -18,6 +18,8 @@ import (
 	algorithms2 "github.com/sort/algorithms/counting"
 
 	algorithms3 "github.com/sort/algorithms/merge"
+
+	algorithms4 "github.com/sort/algorithms/quick"
 )
 
 //Command line arguments
@@ -31,6 +33,7 @@ var sortMap = map[string]bool{
 	"bubble":   false,
 	"counting": false,
 	"merge":    false,
+	"quick":    false,
 }
 
 // retrieve command line arguments
@@ -150,6 +153,8 @@ func run(v *SortInfo, semaphore chan bool) {
 		v.OrderedSlice = algorithms2.Counting(v.ArgumentToFunc)
 	case "merge":
 		v.OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
+	case "quick":
+		v.OrderedSlice = algorithms4.QuickSort(v.ArgumentToFunc)
 	}
 
 	v.SortDuration = time.Since(v.StartTime)
