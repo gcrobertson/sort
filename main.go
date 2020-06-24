@@ -24,6 +24,8 @@ import (
 	algorithms5 "github.com/sort/algorithms/heap"
 
 	algorithms6 "github.com/sort/algorithms/shell"
+
+	algorithms7 "github.com/sort/algorithms/selection"
 )
 
 //Command line arguments
@@ -34,12 +36,13 @@ var (
 
 //Sorting algorithms
 var sortMap = map[string]bool{
-	"bubble":   false,
-	"counting": false,
-	"heap":     false,
-	"merge":    false,
-	"quick":    false,
-	"shell":    false,
+	"bubble":    false,
+	"counting":  false,
+	"heap":      false,
+	"merge":     false,
+	"quick":     false,
+	"selection": false,
+	"shell":     false,
 }
 
 // retrieve command line arguments
@@ -163,6 +166,8 @@ func run(v *SortInfo, semaphore chan bool) {
 		v.OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
 	case "quick":
 		v.OrderedSlice = algorithms4.QuickSort(v.ArgumentToFunc)
+	case "selection":
+		v.OrderedSlice = algorithms7.SelectionSort(v.ArgumentToFunc)
 	case "shell":
 		v.OrderedSlice = algorithms6.ShellSort(v.ArgumentToFunc)
 	}
