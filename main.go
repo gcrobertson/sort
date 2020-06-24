@@ -1,8 +1,5 @@
 /*
  *	clear && go run main.go -sorts=merge,bubble,counting -size=10000
- *	clear && go run main.go -sort=merge,heap,bubble,insertion,shell,counting,selection,quick  -size=9000
- *	clear && go run main.go -sort=sinking,insertion,bubble,selection -size=110000
- *	clear && go run main.go -sort=bubble -size=5
  */
 
 package main
