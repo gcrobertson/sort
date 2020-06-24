@@ -1,5 +1,5 @@
 /*
- *	clear && go run main.go -sorts=merge,bubble,counting,heap,quick -size=100000
+ *	clear && go run main.go -sorts=bubble,counting,heap,merge,quick,selection,shell -size=100000
  */
 
 package main
@@ -26,6 +26,8 @@ import (
 	algorithms6 "github.com/sort/algorithms/shell"
 
 	algorithms7 "github.com/sort/algorithms/selection"
+
+	algorithms8 "github.com/sort/algorithms/insertion"
 )
 
 //Command line arguments
@@ -39,6 +41,7 @@ var sortMap = map[string]bool{
 	"bubble":    false,
 	"counting":  false,
 	"heap":      false,
+	"insertion": false,
 	"merge":     false,
 	"quick":     false,
 	"selection": false,
@@ -162,6 +165,8 @@ func run(v *SortInfo, semaphore chan bool) {
 		v.OrderedSlice = algorithms2.Counting(v.ArgumentToFunc)
 	case "heap":
 		v.OrderedSlice = algorithms5.HeapSort(v.ArgumentToFunc)
+	case "insertion":
+		v.OrderedSlice = algorithms8.InsertionSort(v.ArgumentToFunc)
 	case "merge":
 		v.OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
 	case "quick":
