@@ -1,5 +1,5 @@
 /*
- *	clear && go run main.go -sorts=merge,bubble,counting -size=10000
+ *	clear && go run main.go -sorts=merge,bubble,counting,heap,quick -size=100000
  */
 
 package main
@@ -22,6 +22,8 @@ import (
 	algorithms4 "github.com/sort/algorithms/quick"
 
 	algorithms5 "github.com/sort/algorithms/heap"
+
+	algorithms6 "github.com/sort/algorithms/shell"
 )
 
 //Command line arguments
@@ -37,6 +39,7 @@ var sortMap = map[string]bool{
 	"heap":     false,
 	"merge":    false,
 	"quick":    false,
+	"shell":    false,
 }
 
 // retrieve command line arguments
@@ -160,12 +163,15 @@ func run(v *SortInfo, semaphore chan bool) {
 		v.OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
 	case "quick":
 		v.OrderedSlice = algorithms4.QuickSort(v.ArgumentToFunc)
+	case "shell":
+		v.OrderedSlice = algorithms6.ShellSort(v.ArgumentToFunc)
 	}
 
 	v.SortDuration = time.Since(v.StartTime)
-	semaphore <- true
 
 	fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, v.SortDuration)
+
+	semaphore <- true
 }
 
 func validateSortInfo(si SortInfo, semaphore chan bool) {
