@@ -44,7 +44,7 @@ func parseCLI() {
 // validate command line argument for size
 func validateCLISize() {
 
-	if 1 > *size || *size > 100000 {
+	if 1 > *size || *size > 10000000 {
 		*size = 5
 	}
 }
@@ -96,16 +96,13 @@ func main() {
 
 	for k := range SortInfoSlice {
 
-		SortInfoSlice[k].StartTime = time.Now()
-
 		run(&SortInfoSlice[k])
 
-		SortInfoSlice[k].SortDuration = time.Since(SortInfoSlice[k].StartTime)
 	}
 
 	for k, v := range SortInfoSlice {
 		// fmt.Printf("contents of the SortInfoSlice index [%d]: [%+v]\n", k, v)
-		fmt.Printf("sort [%s]: took [%+v] much time\n", v.AlgorithmName, SortInfoSlice[k].SortDuration)
+		fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, SortInfoSlice[k].SortDuration)
 	}
 
 }
@@ -135,6 +132,8 @@ func setupSortInfoSlice() {
 
 func run(v *SortInfo) {
 
+	v.StartTime = time.Now()
+
 	switch v.AlgorithmName {
 	case "bubble":
 		v.OrderedSlice = algorithms.Bubble(v.ArgumentToFunc)
@@ -143,4 +142,6 @@ func run(v *SortInfo) {
 	case "merge":
 		v.OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
 	}
+
+	v.SortDuration = time.Since(v.StartTime)
 }
