@@ -1,16 +1,5 @@
 package algorithms
 
-// Merge Sort in Golang
-
-// func main() {
-// 	//slice := numbers.GenerateSlice(20)
-
-// 	slice := []int{5, 4, 3, 2, 1, 0}
-
-// 	fmt.Println("\n--- Unsorted --- \n\n", slice)
-// 	fmt.Println("\n--- Sorted ---\n\n", mergeSort(slice))
-// }
-
 // MergeSort ...
 func MergeSort(xi []int) []int {
 

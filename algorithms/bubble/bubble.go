@@ -2,25 +2,6 @@ package algorithms
 
 import "fmt"
 
-// var xi = []int{53, 12, 1024, 35} // ,  101, 11
-
-// func presort() {
-// 	fmt.Printf("Presort\t:%v\n", xi)
-// }
-
-// func postsort() {
-// 	fmt.Printf("Sorted\t:%v\n", xi)
-// }
-
-/*
- *
- */
-// func main() {
-// 	presort()
-// 	bubble(xi)
-// 	postsort()
-// }
-
 //Bubble ...
 func Bubble(xi []int) []int {
 

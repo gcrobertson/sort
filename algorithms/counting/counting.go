@@ -5,16 +5,6 @@ import (
 	"math"
 )
 
-// var xi = []int{-100, 156, 1, 4, 1, 2, -6, 7, 5, 2}
-
-// func presort() {
-// 	fmt.Printf("Presort\t:%v\n", xi)
-// }
-
-// func postsort() {
-// 	fmt.Printf("Sorted\t:%v\n", xi)
-// }
-
 func maxMin(xi []int) (max int, min int) {
 	max, min = xi[0], xi[0]
 	for i := 0; i < len(xi); i++ {
@@ -27,18 +17,7 @@ func maxMin(xi []int) (max int, min int) {
 	return
 }
 
-/*
- *
- */
-// func main() {
-// 	presort()
-// 	xi = counting(xi)
-// 	postsort()
-// }
-
-/*Counting sort handles negative numbers by offsetting minimum value to 0 index
- *
- */
+// Counting sort handles negative numbers by offsetting minimum value to 0 index
 func Counting(xi []int) []int {
 
 	fmt.Println("Inside Counting...")
