@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	// fix with go module
+	// @TODO: fix imports go module
 
 	algorithms "github.com/sort/algorithms/bubble"
 
@@ -105,9 +105,16 @@ func main() {
 
 	fmt.Println("Performing validation...")
 
+	semaphore = make(chan bool, len(SortInfoSlice))
 	for k := range SortInfoSlice {
-		validateSortInfo(SortInfoSlice[k])
+		go validateSortInfo(SortInfoSlice[k], semaphore)
 	}
+
+	// blocks execution until all channels come back.
+	for i := 0; i < len(SortInfoSlice); i++ {
+		<-semaphore
+	}
+	close(semaphore)
 
 	fmt.Println("Exiting func main...")
 }
@@ -154,10 +161,10 @@ func run(v *SortInfo, semaphore chan bool) {
 	fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, v.SortDuration)
 }
 
-func validateSortInfo(si SortInfo) {
+func validateSortInfo(si SortInfo, semaphore chan bool) {
 
 	if len(si.ArgumentToFunc) != len(si.OrderedSlice) {
-		fmt.Printf("Error! %s had input size of %d and created ordered list of size %d\n", si.AlgorithmName, si.ArgumentToFunc, si.OrderedSlice)
+		fmt.Printf("sort [%s]: input size %d != ordered list size %d\n", si.AlgorithmName, si.ArgumentToFunc, si.OrderedSlice)
 		return
 	}
 
@@ -167,5 +174,7 @@ func validateSortInfo(si SortInfo) {
 			err++
 		}
 	}
-	fmt.Printf("%s had %d errors!\n", si.AlgorithmName, err)
+	fmt.Printf("sort [%s]: had %d errors!\n", si.AlgorithmName, err)
+
+	semaphore <- true
 }
