@@ -1,4 +1,5 @@
 /*
+ *	clear && go run main.go -sorts=merge,bubble,counting -size=10000
  *	clear && go run main.go -sort=merge,heap,bubble,insertion,shell,counting,selection,quick  -size=9000
  *	clear && go run main.go -sort=sinking,insertion,bubble,selection -size=110000
  *	clear && go run main.go -sort=bubble -size=5
@@ -94,14 +95,22 @@ func main() {
 	// log the begin time end time to SortInfo struct?
 	// run as a go routine?
 
+	semaphore := make(chan bool, len(SortInfoSlice))
+
 	for k := range SortInfoSlice {
 
-		run(&SortInfoSlice[k])
+		go run(&SortInfoSlice[k], semaphore)
 
 	}
 
+	// block execution until all channels come back.
+
+	for i := 0; i < len(SortInfoSlice); i++ {
+		<-semaphore
+	}
+	close(semaphore)
+
 	for k, v := range SortInfoSlice {
-		// fmt.Printf("contents of the SortInfoSlice index [%d]: [%+v]\n", k, v)
 		fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, SortInfoSlice[k].SortDuration)
 	}
 
@@ -130,7 +139,7 @@ func setupSortInfoSlice() {
 	}
 }
 
-func run(v *SortInfo) {
+func run(v *SortInfo, semaphore chan bool) {
 
 	v.StartTime = time.Now()
 
@@ -144,4 +153,8 @@ func run(v *SortInfo) {
 	}
 
 	v.SortDuration = time.Since(v.StartTime)
+	semaphore <- true
+
+	// would it be better suited as its own func and called here?
+	// fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, SortInfoSlice[k].SortDuration)
 }
