@@ -1,11 +1,7 @@
 package algorithms
 
-import "fmt"
-
 //Bubble ...
 func Bubble(xi []int) []int {
-
-	fmt.Println("Inside Bubble...")
 
 	for i := 0; i < len(xi); i++ {
 		for j := 0; j < len(xi)-i-1; j++ {

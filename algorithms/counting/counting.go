@@ -1,7 +1,6 @@
 package algorithms
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -19,8 +18,6 @@ func maxMin(xi []int) (max int, min int) {
 
 // Counting sort handles negative numbers by offsetting minimum value to 0 index
 func Counting(xi []int) []int {
-
-	fmt.Println("Inside Counting...")
 
 	max, min := maxMin(xi)
 	r := max - min + 1

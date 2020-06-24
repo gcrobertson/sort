@@ -91,29 +91,25 @@ func main() {
 	validateCLISorts()
 	setupSortInfoSlice()
 
-	// maybe run should take a *SortInfo
-	// log the begin time end time to SortInfo struct?
-	// run as a go routine?
-
 	semaphore := make(chan bool, len(SortInfoSlice))
 
 	for k := range SortInfoSlice {
-
 		go run(&SortInfoSlice[k], semaphore)
-
 	}
 
-	// block execution until all channels come back.
-
+	// blocks execution until all channels come back.
 	for i := 0; i < len(SortInfoSlice); i++ {
 		<-semaphore
 	}
 	close(semaphore)
 
-	for k, v := range SortInfoSlice {
-		fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, SortInfoSlice[k].SortDuration)
+	fmt.Println("Performing validation...")
+
+	for k := range SortInfoSlice {
+		validateSortInfo(SortInfoSlice[k])
 	}
 
+	fmt.Println("Exiting func main...")
 }
 
 func setupSortInfoSlice() {
@@ -155,6 +151,21 @@ func run(v *SortInfo, semaphore chan bool) {
 	v.SortDuration = time.Since(v.StartTime)
 	semaphore <- true
 
-	// would it be better suited as its own func and called here?
-	// fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, SortInfoSlice[k].SortDuration)
+	fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, v.SortDuration)
+}
+
+func validateSortInfo(si SortInfo) {
+
+	if len(si.ArgumentToFunc) != len(si.OrderedSlice) {
+		fmt.Printf("Error! %s had input size of %d and created ordered list of size %d\n", si.AlgorithmName, si.ArgumentToFunc, si.OrderedSlice)
+		return
+	}
+
+	var err int
+	for i := 1; i < len(si.OrderedSlice); i++ {
+		if si.OrderedSlice[i-1] > si.OrderedSlice[i] {
+			err++
+		}
+	}
+	fmt.Printf("%s had %d errors!\n", si.AlgorithmName, err)
 }
