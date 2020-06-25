@@ -16,6 +16,8 @@ func maxMin(xi []int) (max int, min int) {
 	return
 }
 
+// @TODO: This func breaks when there are only positive numbers I think... would be a good test.
+
 // Counting sort handles negative numbers by offsetting minimum value to 0 index
 func Counting(xi []int) []int {
 
