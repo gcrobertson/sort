@@ -162,7 +162,7 @@ func run(v *SortInfo, semaphore chan bool) {
 	case "bubble":
 		v.OrderedSlice = algorithms.Bubble(v.ArgumentToFunc)
 	case "counting":
-		v.OrderedSlice = algorithms2.Counting(v.ArgumentToFunc)
+		v.OrderedSlice = algorithms2.CountingSort(v.ArgumentToFunc)
 	case "heap":
 		v.OrderedSlice = algorithms5.HeapSort(v.ArgumentToFunc)
 	case "insertion":

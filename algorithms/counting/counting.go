@@ -16,38 +16,34 @@ func maxMin(xi []int) (max int, min int) {
 	return
 }
 
-// @TODO: This func breaks when there are only positive numbers I think... would be a good test.
+// CountingSort ...
+func CountingSort(A []int) []int {
 
-// Counting sort handles negative numbers by offsetting minimum value to 0 index
-func Counting(xi []int) []int {
+	var C = make([]int, len(A))
+	max, min := maxMin(A)
+	zeroOffset := 1
 
-	max, min := maxMin(xi)
-	r := max - min + 1
+	absMin := int(math.Abs(float64(min)))
+	lenB := max + absMin + zeroOffset
+	B := make([]int, lenB) // for numbers -3 to 3 lenB = 7
 
-	// fmt.Printf("max: [%v] min: [%v] range: [%v]\n", max, min, r)
-
-	// 1 key for every int value in range, 0 indexed
-	var indexSlice = make([]int, r, r)
-
-	// offset to place values in 0 indexed slice
-	offset := int(math.Abs(float64(min)))
-
-	// step 1: add all values to 0 indexed slice
-	for i := 0; i < len(xi); i++ {
-		indexSlice[xi[i]+offset]++
+	// step 1: add to B
+	for i := 0; i < len(A); i++ {
+		val := A[i]
+		B[val+absMin]++
+	}
+	// step 2: tally
+	for i := 1; i < len(B); i++ {
+		B[i] += B[i-1]
 	}
 
-	// step 2: each element at each index stores the sum of previous keys
-	for i := 1; i < len(indexSlice); i++ {
-		indexSlice[i] = indexSlice[i] + indexSlice[i-1]
+	// step 3: order
+	for i := 0; i < len(A); i++ {
+		val := A[i]
+		key := B[val+absMin] - zeroOffset
+		C[key] = val
+		B[val+absMin]--
 	}
 
-	// step 3:
-	result := make([]int, len(xi))
-	for i := 0; i < len(xi); i++ {
-		result[indexSlice[xi[i]+offset]-1] = xi[i]
-		indexSlice[xi[i]+offset]--
-	}
-
-	return result
+	return C
 }
