@@ -44,6 +44,7 @@ var sortMap = map[string]bool{
 	"insertion": false,
 	"merge":     false,
 	"quick":     false,
+	"radix":     false,
 	"selection": false,
 	"shell":     false,
 }
@@ -78,7 +79,7 @@ func initializeIntSlice() []int {
 	var slice = make([]int, *size, *size)
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < *size; i++ {
-		slice[i] = rand.Intn(999) - rand.Intn(999)
+		slice[i] = rand.Intn(9999) - rand.Intn(9999)
 	}
 	return slice
 }
@@ -171,6 +172,9 @@ func run(v *SortInfo, semaphore chan bool) {
 		v.OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
 	case "quick":
 		v.OrderedSlice = algorithms4.QuickSort(v.ArgumentToFunc)
+	case "radix":
+		// algorithms9.RadixSort(v.ArgumentToFunc, len(v.ArgumentToFunc))
+		// v.OrderedSlice = v.ArgumentToFunc
 	case "selection":
 		v.OrderedSlice = algorithms7.SelectionSort(v.ArgumentToFunc)
 	case "shell":

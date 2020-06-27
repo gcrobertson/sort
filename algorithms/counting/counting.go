@@ -19,31 +19,31 @@ func maxMin(xi []int) (max int, min int) {
 // CountingSort ...
 func CountingSort(A []int) []int {
 
-	var C = make([]int, len(A))
+	var B = make([]int, len(A))
 	max, min := maxMin(A)
 	zeroOffset := 1
 
 	absMin := int(math.Abs(float64(min)))
-	lenB := max + absMin + zeroOffset
-	B := make([]int, lenB) // for numbers -3 to 3 lenB = 7
+	lenC := max + absMin + zeroOffset
+	C := make([]int, lenC) // for numbers -3 to 3 lenB = 7
 
-	// step 1: add to B
+	// step 1: add to C
 	for i := 0; i < len(A); i++ {
 		val := A[i]
-		B[val+absMin]++
+		C[val+absMin]++
 	}
 	// step 2: tally
-	for i := 1; i < len(B); i++ {
-		B[i] += B[i-1]
+	for i := 1; i < lenC; i++ {
+		C[i] += C[i-1]
 	}
 
 	// step 3: order
 	for i := 0; i < len(A); i++ {
 		val := A[i]
-		key := B[val+absMin] - zeroOffset
-		C[key] = val
-		B[val+absMin]--
+		key := C[val+absMin] - zeroOffset
+		B[key] = val
+		C[val+absMin]--
 	}
 
-	return C
+	return B
 }
