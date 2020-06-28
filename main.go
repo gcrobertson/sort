@@ -1,7 +1,7 @@
 /*
  *	clear && go run main.go -sorts=bubble,counting,heap,insertion,merge,quick,radix,selection,shell -size=100000
  *
- *	clear && go run main.go -sorts=counting,radix -size=20 -range=99999
+ *	clear && go run main.go -sorts=counting,radix -size=20 -range=99999 -natural=true
  *
  */
 
@@ -37,9 +37,10 @@ import (
 
 //Command line arguments
 var (
-	xrange         = flag.Int("range", 9999, "data range of random integer array. 0 - range.")
-	size           = flag.Int("size", 0, "data size of random integer array to be sorted.")
-	sorts  *string = flag.String("sorts", "", "sort method. available options: bubble, selection, sinking")
+	xrange           = flag.Int("range", 999, "data range of random integer array. 0 - range.")
+	size             = flag.Int("size", 0, "data size of random integer array to be sorted.")
+	sorts    *string = flag.String("sorts", "", "sort method. available options: bubble, selection, sinking")
+	xnatural         = flag.Bool("natural", false, "natural numbers only, including 0 and limited to `range` argument.")
 )
 
 //Sorting algorithms
@@ -88,7 +89,10 @@ func initializeIntSlice() []int {
 	var slice = make([]int, *size, *size)
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < *size; i++ {
-		slice[i] = rand.Intn(*xrange) - rand.Intn(*xrange)
+		slice[i] = rand.Intn(*xrange)
+		if *xnatural == false {
+			slice[i] -= rand.Intn(*xrange)
+		}
 	}
 	return slice
 }
@@ -96,7 +100,6 @@ func initializeIntSlice() []int {
 //SortInfo ...
 type SortInfo struct {
 	AlgorithmName  string
-	UntouchedCopy  []int
 	ArgumentToFunc []int
 	OrderedSlice   []int
 	StartTime      time.Time
@@ -153,10 +156,8 @@ func setupSortInfoSlice() {
 				AlgorithmName: k, // set up name from map key
 			}
 
-			nSortInfo.UntouchedCopy = make([]int, len(originalSlice))
 			nSortInfo.ArgumentToFunc = make([]int, len(originalSlice))
 
-			copy(nSortInfo.UntouchedCopy, originalSlice) // Probably unnecessary to hold onto this but for now it's okay
 			copy(nSortInfo.ArgumentToFunc, originalSlice)
 
 			SortInfoSlice = append(SortInfoSlice, nSortInfo)
@@ -211,9 +212,9 @@ func validateSortInfo(si SortInfo, semaphore chan bool) {
 	}
 	fmt.Printf("sort [%s]: had %d errors!\n", si.AlgorithmName, err)
 
-	if len(si.OrderedSlice) < 21 {
-		fmt.Printf("sort [%s]: ordered = [%v]\n", si.AlgorithmName, si.OrderedSlice)
-	}
+	// if len(si.OrderedSlice) < 21 {
+	// 	fmt.Printf("sort [%s]: ordered = [%v]\n", si.AlgorithmName, si.OrderedSlice)
+	// }
 
 	semaphore <- true
 }
