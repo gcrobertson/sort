@@ -1,5 +1,8 @@
 /*
- *	clear && go run main.go -sorts=bubble,counting,heap,insertion,merge,quick,selection,shell -size=100000
+ *	clear && go run main.go -sorts=bubble,counting,heap,insertion,merge,quick,radix,selection,shell -size=100000
+ *
+ *	clear && go run main.go -sorts=counting,radix -size=20 -range=99999
+ *
  */
 
 package main
@@ -28,12 +31,15 @@ import (
 	algorithms7 "github.com/sort/algorithms/selection"
 
 	algorithms8 "github.com/sort/algorithms/insertion"
+
+	algorithms9 "github.com/sort/algorithms/radix"
 )
 
 //Command line arguments
 var (
-	size          = flag.Int("size", 0, "data size of random integer array to be sorted.")
-	sorts *string = flag.String("sorts", "", "sort method. available options: bubble, selection, sinking")
+	xrange         = flag.Int("range", 9999, "data range of random integer array. 0 - range.")
+	size           = flag.Int("size", 0, "data size of random integer array to be sorted.")
+	sorts  *string = flag.String("sorts", "", "sort method. available options: bubble, selection, sinking")
 )
 
 //Sorting algorithms
@@ -51,15 +57,18 @@ var sortMap = map[string]bool{
 
 // retrieve command line arguments
 func parseCLI() {
-
 	flag.Parse()
 }
 
 // validate command line argument for size
 func validateCLISize() {
 
-	if 1 > *size || *size > 10000000 {
+	if 1 > *size || *size > 1000000000 {
 		*size = 5
+	}
+
+	if 0 > *xrange || *xrange > 9999999 {
+		*xrange = 999
 	}
 }
 
@@ -79,7 +88,7 @@ func initializeIntSlice() []int {
 	var slice = make([]int, *size, *size)
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < *size; i++ {
-		slice[i] = rand.Intn(9999) - rand.Intn(9999)
+		slice[i] = rand.Intn(*xrange) - rand.Intn(*xrange)
 	}
 	return slice
 }
@@ -173,8 +182,7 @@ func run(v *SortInfo, semaphore chan bool) {
 	case "quick":
 		v.OrderedSlice = algorithms4.QuickSort(v.ArgumentToFunc)
 	case "radix":
-		// algorithms9.RadixSort(v.ArgumentToFunc, len(v.ArgumentToFunc))
-		// v.OrderedSlice = v.ArgumentToFunc
+		v.OrderedSlice = algorithms9.RadixSort(v.ArgumentToFunc, len(v.ArgumentToFunc))
 	case "selection":
 		v.OrderedSlice = algorithms7.SelectionSort(v.ArgumentToFunc)
 	case "shell":
@@ -202,6 +210,10 @@ func validateSortInfo(si SortInfo, semaphore chan bool) {
 		}
 	}
 	fmt.Printf("sort [%s]: had %d errors!\n", si.AlgorithmName, err)
+
+	if len(si.OrderedSlice) < 21 {
+		fmt.Printf("sort [%s]: ordered = [%v]\n", si.AlgorithmName, si.OrderedSlice)
+	}
 
 	semaphore <- true
 }

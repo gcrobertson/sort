@@ -1,45 +1,33 @@
-package main
+package algorithms
 
 import (
-	"fmt"
 	"math"
 )
 
 // https://www.geeksforgeeks.org/radix-sort/
 // The idea of Radix Sort is to do digit by digit sort starting from least significant digit to most significant digit. Radix sort uses counting sort as a subroutine to sort.
 
-func maxMin(xi []int) (max int, min int) {
-	max, min = xi[0], xi[0]
+func max(xi []int) (max int) {
+	max = xi[0]
 	for i := 0; i < len(xi); i++ {
 		if xi[i] > max {
 			max = xi[i]
-		} else if xi[i] < min {
-			min = xi[i]
 		}
 	}
 	return
 }
 
-func main() {
-
-	var A = []int{170, 45, 75, 90, 802, 24, 2, 66, -900}
-
-	fmt.Printf("pre: %v\n", A)
-
-	RadixSort(A, len(A))
-
-	fmt.Printf("post: %v\n", A)
-}
-
 // RadixSort ...
-func RadixSort(A []int, lenA int) {
-	max, _ := maxMin(A)
+func RadixSort(A []int, lenA int) []int {
+	max := max(A)
 	for exp := 1; max/exp > 0; exp = exp * 10 {
 		CountingSort(A, lenA, exp)
 	}
+
+	return A
 }
 
-func minMax(A []int, lenA, exp int) (int, int) {
+func absMinMax(A []int, lenA, exp int) (int, int) {
 	var min, max int = (A[0] / exp) % 10, (A[0] / exp) % 10
 	for i := 0; i < lenA; i++ {
 		// fmt.Printf("Comparing number: %v from base number %v\n", (A[i]/exp)%10, A[i])
@@ -49,15 +37,16 @@ func minMax(A []int, lenA, exp int) (int, int) {
 			max = (A[i] / exp) % 10
 		}
 	}
-	// fmt.Printf("the max number is %v and the min number is %v\n", max, min)
-	return min, max
+
+	absMin := int(math.Abs(float64(min)))
+
+	return absMin, max
 }
 
 // CountingSort ... works with negative numbers now!
 func CountingSort(A []int, lenA, exp int) {
 
-	min, max := minMax(A, lenA, exp)
-	absMin := int(math.Abs(float64(min)))
+	absMin, max := absMinMax(A, lenA, exp)
 	zeroOffset := 1
 	lenC := max + absMin + zeroOffset
 
