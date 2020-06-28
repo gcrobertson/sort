@@ -39,7 +39,7 @@ import (
 var (
 	xrange           = flag.Int("range", 999, "data range of random integer array. 0 - range.")
 	size             = flag.Int("size", 0, "data size of random integer array to be sorted.")
-	sorts    *string = flag.String("sorts", "", "sort method. available options: bubble, selection, sinking")
+	sorts    *string = flag.String("sorts", "", "sort method. available options: bubble, counting, heap, insertion, merge, quick, radix, selection, shell")
 	xnatural         = flag.Bool("natural", false, "natural numbers only, including 0 and limited to `range` argument.")
 )
 
