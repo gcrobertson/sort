@@ -5,91 +5,78 @@ import (
 	"math"
 )
 
-func main() {
+// https://www.geeksforgeeks.org/radix-sort/
+// The idea of Radix Sort is to do digit by digit sort starting from least significant digit to most significant digit. Radix sort uses counting sort as a subroutine to sort.
 
-	// xi := []int{2, 5, 4, 3, 3, 3, 0}
-	// xi = Counting(xi)
-	// fmt.Printf("Counting result: %+v\n", xi)
-
-	A := []int{5, 3, 2, 3}
-	fmt.Printf("CountingSortNegatives presort: %+v\n", A)
-	A = CountingSortNegatives(A)
-	fmt.Printf("CountingSortNegatives result: %+v\n", A)
-
-}
-
-func maxMin(xi []int) (max int, min int) {
-	max, min = xi[0], xi[0]
+func max(xi []int) (max int) {
+	max = xi[0]
 	for i := 0; i < len(xi); i++ {
 		if xi[i] > max {
 			max = xi[i]
-		} else if xi[i] < min {
-			min = xi[i]
 		}
 	}
 	return
 }
 
-// Counting sort
-func Counting(A []int) []int {
+func main() {
 
-	max, _ := maxMin(A)
-	zeroOffset := 1
-	lenB := max + zeroOffset
-	var B = make([]int, lenB)
+	var A = []int{170, 45, 75, 90, 802, 24, 2, 66, -900}
 
-	// step 1: add all 0-max numbers to the indexed slice.
-	for i := 0; i < len(A); i++ {
-		val := A[i]
-		B[val]++
-	}
+	fmt.Printf("pre: %v\n", A)
 
-	// step 2: each element at each index stores the sum of previous keys
-	for i := 1; i < len(B); i++ {
-		B[i] += B[i-1]
-	}
+	RadixSort(A, len(A))
 
-	// step 3:
-	var C = make([]int, len(A))
-
-	for i := 0; i < len(A); i++ {
-		val := A[i]                  // value of A is the key for B.
-		index := B[val] - zeroOffset // accomodate for 0 value
-		C[index] = val
-		B[val]--
-	}
-
-	return C
+	fmt.Printf("post: %v\n", A)
 }
 
-// CountingSortNegatives ...
-func CountingSortNegatives(A []int) []int {
+// RadixSort ...
+func RadixSort(A []int, lenA int) {
+	max := max(A)
+	for exp := 1; max/exp > 0; exp = exp * 10 {
+		CountingSort(A, lenA, exp)
+	}
+}
 
-	var C = make([]int, len(A))
-	max, min := maxMin(A)
-	zeroOffset := 1
+func minMax(A []int, lenA, exp int) (int, int) {
+	var min, max int = (A[0] / exp) % 10, (A[0] / exp) % 10
+	for i := 0; i < lenA; i++ {
+		// fmt.Printf("Comparing number: %v from base number %v\n", (A[i]/exp)%10, A[i])
+		if (A[i]/exp)%10 < min {
+			min = (A[i] / exp) % 10
+		} else if (A[i]/exp)%10 > max {
+			max = (A[i] / exp) % 10
+		}
+	}
+	// fmt.Printf("the max number is %v and the min number is %v\n", max, min)
+	return min, max
+}
 
+// CountingSort ... works with negative numbers now!
+func CountingSort(A []int, lenA, exp int) {
+
+	min, max := minMax(A, lenA, exp)
 	absMin := int(math.Abs(float64(min)))
-	lenB := max + absMin + zeroOffset
-	B := make([]int, lenB) // for numbers -3 to 3 lenB = 7
+	zeroOffset := 1
+	lenC := max + absMin + zeroOffset
 
-	// step 1: add to B
-	for i := 0; i < len(A); i++ {
-		val := A[i]
-		B[val+absMin]++
-	}
-	// step 2: tally
-	for i := 1; i < len(B); i++ {
-		B[i] += B[i-1]
-	}
+	var B = make([]int, lenA)
+	var C = make([]int, lenC)
 
-	// step 3: order
-	for i := 0; i < len(A); i++ {
-		val := A[i]
-		key := B[val+absMin] - zeroOffset
-		C[key] = val
-		B[val+absMin]--
+	// Store count of occurrences in count[]
+	for i := 0; i < lenA; i++ {
+		expVal := (A[i] / exp) % 10
+		C[expVal+absMin]++
 	}
 
-	return C
+	for i := 1; i < lenC; i++ {
+		C[i] += C[i-1]
+	}
+
+	for i := lenA - 1; i >= 0; i-- {
+		expVal := (A[i] / exp) % 10
+		B[C[expVal+absMin]-1] = A[i]
+		C[expVal+absMin]--
+	}
+
+	copy(A, B)
 }
