@@ -4,28 +4,23 @@ import (
 	"math"
 )
 
-func maxMin(xi []int) (max int, min int) {
-	max, min = xi[0], xi[0]
-	for i := 0; i < len(xi); i++ {
-		if xi[i] > max {
-			max = xi[i]
-		} else if xi[i] < min {
-			min = xi[i]
-		}
-	}
-	return
-}
-
 // CountingSort ...
 func CountingSort(A []int) []int {
 
-	var B = make([]int, len(A))
-	max, min := maxMin(A)
+	max, min := A[0], A[0]
+	for i := 0; i < len(A); i++ {
+		if A[i] > max {
+			max = A[i]
+		} else if A[i] < min {
+			min = A[i]
+		}
+	}
 	zeroOffset := 1
-
 	absMin := int(math.Abs(float64(min)))
 	lenC := max + absMin + zeroOffset
-	C := make([]int, lenC) // for numbers -3 to 3 lenB = 7
+
+	var B = make([]int, len(A))
+	var C = make([]int, lenC)
 
 	// step 1: add to C
 	for i := 0; i < len(A); i++ {

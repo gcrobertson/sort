@@ -35,6 +35,18 @@ import (
 	algorithms9 "github.com/sort/algorithms/radix"
 )
 
+//SortInfo ...
+type SortInfo struct {
+	AlgorithmName  string
+	ArgumentToFunc []int
+	OrderedSlice   []int
+	StartTime      time.Time
+	SortDuration   time.Duration
+}
+
+//SortInfoSlice ...
+var SortInfoSlice []SortInfo
+
 //Command line arguments
 var (
 	xrange           = flag.Int("range", 999, "data range of random integer array. 0 - range.")
@@ -54,6 +66,41 @@ var sortMap = map[string]bool{
 	"radix":     false,
 	"selection": false,
 	"shell":     false,
+}
+
+func main() {
+
+	parseCLI()
+	validateCLISize()
+	validateCLISorts()
+	setupSortInfoSlice()
+
+	semaphore := make(chan bool, len(SortInfoSlice))
+
+	for k := range SortInfoSlice {
+		go run(&SortInfoSlice[k], semaphore)
+	}
+
+	// blocks execution until all channels come back.
+	for i := 0; i < len(SortInfoSlice); i++ {
+		<-semaphore
+	}
+	close(semaphore)
+
+	fmt.Println("Performing validation...")
+
+	semaphore = make(chan bool, len(SortInfoSlice))
+	for k := range SortInfoSlice {
+		go validateSortInfo(SortInfoSlice[k], semaphore)
+	}
+
+	// blocks execution until all channels come back.
+	for i := 0; i < len(SortInfoSlice); i++ {
+		<-semaphore
+	}
+	close(semaphore)
+
+	fmt.Println("Exiting func main...")
 }
 
 // retrieve command line arguments
@@ -95,53 +142,6 @@ func initializeIntSlice() []int {
 		}
 	}
 	return slice
-}
-
-//SortInfo ...
-type SortInfo struct {
-	AlgorithmName  string
-	ArgumentToFunc []int
-	OrderedSlice   []int
-	StartTime      time.Time
-	SortDuration   time.Duration
-}
-
-//SortInfoSlice ...
-var SortInfoSlice []SortInfo
-
-func main() {
-
-	parseCLI()
-	validateCLISize()
-	validateCLISorts()
-	setupSortInfoSlice()
-
-	semaphore := make(chan bool, len(SortInfoSlice))
-
-	for k := range SortInfoSlice {
-		go run(&SortInfoSlice[k], semaphore)
-	}
-
-	// blocks execution until all channels come back.
-	for i := 0; i < len(SortInfoSlice); i++ {
-		<-semaphore
-	}
-	close(semaphore)
-
-	fmt.Println("Performing validation...")
-
-	semaphore = make(chan bool, len(SortInfoSlice))
-	for k := range SortInfoSlice {
-		go validateSortInfo(SortInfoSlice[k], semaphore)
-	}
-
-	// blocks execution until all channels come back.
-	for i := 0; i < len(SortInfoSlice); i++ {
-		<-semaphore
-	}
-	close(semaphore)
-
-	fmt.Println("Exiting func main...")
 }
 
 func setupSortInfoSlice() {
