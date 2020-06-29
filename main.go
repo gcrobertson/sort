@@ -14,25 +14,7 @@ import (
 	"strings"
 	"time"
 
-	// @TODO: fix imports go module
-
-	algorithms "github.com/sort/algorithms/bubble"
-
-	algorithms2 "github.com/sort/algorithms/counting"
-
-	algorithms3 "github.com/sort/algorithms/merge"
-
-	algorithms4 "github.com/sort/algorithms/quick"
-
-	algorithms5 "github.com/sort/algorithms/heap"
-
-	algorithms6 "github.com/sort/algorithms/shell"
-
-	algorithms7 "github.com/sort/algorithms/selection"
-
-	algorithms8 "github.com/sort/algorithms/insertion"
-
-	algorithms9 "github.com/sort/algorithms/radix"
+	"github.com/sort/algorithms"
 )
 
 //SortInfo ...
@@ -171,23 +153,23 @@ func run(v *SortInfo, semaphore chan bool) {
 
 	switch v.AlgorithmName {
 	case "bubble":
-		v.OrderedSlice = algorithms.Bubble(v.ArgumentToFunc)
+		v.OrderedSlice = algorithms.BubbleSort(v.ArgumentToFunc)
 	case "counting":
-		v.OrderedSlice = algorithms2.CountingSort(v.ArgumentToFunc)
+		v.OrderedSlice = algorithms.CountingSort(v.ArgumentToFunc)
 	case "heap":
-		v.OrderedSlice = algorithms5.HeapSort(v.ArgumentToFunc)
+		v.OrderedSlice = algorithms.HeapSort(v.ArgumentToFunc)
 	case "insertion":
-		v.OrderedSlice = algorithms8.InsertionSort(v.ArgumentToFunc)
+		v.OrderedSlice = algorithms.InsertionSort(v.ArgumentToFunc)
 	case "merge":
-		v.OrderedSlice = algorithms3.MergeSort(v.ArgumentToFunc)
+		v.OrderedSlice = algorithms.MergeSort(v.ArgumentToFunc)
 	case "quick":
-		v.OrderedSlice = algorithms4.QuickSort(v.ArgumentToFunc)
+		v.OrderedSlice = algorithms.QuickSort(v.ArgumentToFunc)
 	case "radix":
-		v.OrderedSlice = algorithms9.RadixSort(v.ArgumentToFunc, len(v.ArgumentToFunc))
+		v.OrderedSlice = algorithms.RadixSort(v.ArgumentToFunc, len(v.ArgumentToFunc))
 	case "selection":
-		v.OrderedSlice = algorithms7.SelectionSort(v.ArgumentToFunc)
+		v.OrderedSlice = algorithms.SelectionSort(v.ArgumentToFunc)
 	case "shell":
-		v.OrderedSlice = algorithms6.ShellSort(v.ArgumentToFunc)
+		v.OrderedSlice = algorithms.ShellSort(v.ArgumentToFunc)
 	}
 
 	v.SortDuration = time.Since(v.StartTime)
