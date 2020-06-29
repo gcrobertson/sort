@@ -52,7 +52,7 @@ var sortMap = map[string]bool{
 
 func main() {
 
-	parseCLI()
+	flag.Parse()
 	validateCLISize()
 	validateCLISorts()
 	setupSortInfoSlice()
@@ -115,11 +115,6 @@ func run(v *SortInfo, semaphore chan bool) {
 	fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, v.SortDuration)
 
 	semaphore <- true
-}
-
-// retrieve command line arguments
-func parseCLI() {
-	flag.Parse()
 }
 
 // validate command line argument for size
