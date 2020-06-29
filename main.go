@@ -192,11 +192,8 @@ func validateSortInfo(si SortInfo, semaphore chan bool) {
 			err++
 		}
 	}
-	fmt.Printf("sort [%s]: had %d errors!\n", si.AlgorithmName, err)
 
-	// if len(si.OrderedSlice) < 21 {
-	// 	fmt.Printf("sort [%s]: ordered = [%v]\n", si.AlgorithmName, si.OrderedSlice)
-	// }
+	fmt.Printf("sort [%s]: had %d errors!\n", si.AlgorithmName, err)
 
 	semaphore <- true
 }
