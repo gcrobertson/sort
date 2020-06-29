@@ -26,6 +26,9 @@ type SortInfo struct {
 	SortDuration   time.Duration
 }
 
+//PresortSlice ...
+var PresortSlice []int
+
 //SortInfoSlice ...
 var SortInfoSlice []SortInfo
 
@@ -140,7 +143,7 @@ func validateCLISorts() {
 	}
 }
 
-func initializeIntSlice() []int {
+func initializeIntSlice() {
 
 	var slice = make([]int, *size, *size)
 	rand.Seed(time.Now().UnixNano())
@@ -150,12 +153,13 @@ func initializeIntSlice() []int {
 			slice[i] -= rand.Intn(*xrange)
 		}
 	}
-	return slice
+
+	PresortSlice = slice
 }
 
 func setupSortInfoSlice() {
 
-	originalSlice := initializeIntSlice()
+	initializeIntSlice()
 
 	for k := range sortMap {
 
@@ -165,9 +169,9 @@ func setupSortInfoSlice() {
 				AlgorithmName: k, // set up name from map key
 			}
 
-			nSortInfo.ArgumentToFunc = make([]int, len(originalSlice))
+			nSortInfo.ArgumentToFunc = make([]int, len(PresortSlice))
 
-			copy(nSortInfo.ArgumentToFunc, originalSlice)
+			copy(nSortInfo.ArgumentToFunc, PresortSlice)
 
 			SortInfoSlice = append(SortInfoSlice, nSortInfo)
 		}

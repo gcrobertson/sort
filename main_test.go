@@ -125,25 +125,64 @@ func Test_initializeIntSlice(t *testing.T) {
 			*xrange = tt.xrange
 			*xnatural = tt.xnatural
 
-			got := initializeIntSlice()
+			initializeIntSlice()
 
-			min, max := got[0], got[0]
-			for i := 0; i < len(got); i++ {
-				if min < got[i] {
-					min = got[i]
-				} else if max > got[i] {
-					max = got[i]
+			min, max := PresortSlice[0], PresortSlice[0]
+			for i := 0; i < len(PresortSlice); i++ {
+				if min < PresortSlice[i] {
+					min = PresortSlice[i]
+				} else if max > PresortSlice[i] {
+					max = PresortSlice[i]
 				}
 			}
 
-			if len(got) != len(tt.want) {
-				t.Errorf("initializeIntSlice() = %v, want %v", got, tt.want)
+			if len(PresortSlice) != len(tt.want) {
+				t.Errorf("initializeIntSlice() = %v, want %v", PresortSlice, tt.want)
 			}
 			if max > tt.xrange {
 				t.Errorf("range out of bound = %v, want <= %v", max, tt.xrange)
 			}
 			if tt.xnatural == true && min < 0 {
 				t.Errorf("range covers negative numbers = %v, want only natural numbers %v", min, tt.xnatural)
+			}
+		})
+	}
+}
+
+func Test_setupSortInfoSlice(t *testing.T) {
+
+	tests := []struct {
+		name     string
+		sorts    string
+		size     int
+		xrange   int
+		xnatural bool
+	}{
+		{
+			name:     "test1",
+			sorts:    "bubble,insertion,merge,selection,radix",
+			size:     100,
+			xrange:   999,
+			xnatural: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			*sorts = tt.sorts
+			*size = tt.size
+			*xrange = tt.xrange
+			*xnatural = tt.xnatural
+			validateCLISorts()
+			initializeIntSlice()
+			setupSortInfoSlice()
+
+			if len(SortInfoSlice) != 5 {
+				t.Errorf("got SortInfoSlice length %v, want %v", len(SortInfoSlice), 5)
+			}
+			for i := 0; i < len(SortInfoSlice); i++ {
+				if !reflect.DeepEqual(SortInfoSlice[i].ArgumentToFunc, PresortSlice) {
+					t.Errorf("got presort slice = %v, want <= %v", SortInfoSlice[i-1].ArgumentToFunc, PresortSlice)
+				}
 			}
 		})
 	}
