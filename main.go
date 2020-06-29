@@ -85,6 +85,38 @@ func main() {
 	fmt.Println("Exiting func main...")
 }
 
+func run(v *SortInfo, semaphore chan bool) {
+
+	v.StartTime = time.Now()
+
+	switch v.AlgorithmName {
+	case "bubble":
+		v.OrderedSlice = algorithms.BubbleSort(v.ArgumentToFunc)
+	case "counting":
+		v.OrderedSlice = algorithms.CountingSort(v.ArgumentToFunc)
+	case "heap":
+		v.OrderedSlice = algorithms.HeapSort(v.ArgumentToFunc)
+	case "insertion":
+		v.OrderedSlice = algorithms.InsertionSort(v.ArgumentToFunc)
+	case "merge":
+		v.OrderedSlice = algorithms.MergeSort(v.ArgumentToFunc)
+	case "quick":
+		v.OrderedSlice = algorithms.QuickSort(v.ArgumentToFunc)
+	case "radix":
+		v.OrderedSlice = algorithms.RadixSort(v.ArgumentToFunc, len(v.ArgumentToFunc))
+	case "selection":
+		v.OrderedSlice = algorithms.SelectionSort(v.ArgumentToFunc)
+	case "shell":
+		v.OrderedSlice = algorithms.ShellSort(v.ArgumentToFunc)
+	}
+
+	v.SortDuration = time.Since(v.StartTime)
+
+	fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, v.SortDuration)
+
+	semaphore <- true
+}
+
 // retrieve command line arguments
 func parseCLI() {
 	flag.Parse()
@@ -94,10 +126,10 @@ func parseCLI() {
 func validateCLISize() {
 
 	if 1 > *size || *size > 1000000000 {
-		*size = 5
+		*size = 10
 	}
 
-	if 0 > *xrange || *xrange > 9999999 {
+	if 1 > *xrange || *xrange > 999999 {
 		*xrange = 999
 	}
 }
@@ -145,38 +177,6 @@ func setupSortInfoSlice() {
 			SortInfoSlice = append(SortInfoSlice, nSortInfo)
 		}
 	}
-}
-
-func run(v *SortInfo, semaphore chan bool) {
-
-	v.StartTime = time.Now()
-
-	switch v.AlgorithmName {
-	case "bubble":
-		v.OrderedSlice = algorithms.BubbleSort(v.ArgumentToFunc)
-	case "counting":
-		v.OrderedSlice = algorithms.CountingSort(v.ArgumentToFunc)
-	case "heap":
-		v.OrderedSlice = algorithms.HeapSort(v.ArgumentToFunc)
-	case "insertion":
-		v.OrderedSlice = algorithms.InsertionSort(v.ArgumentToFunc)
-	case "merge":
-		v.OrderedSlice = algorithms.MergeSort(v.ArgumentToFunc)
-	case "quick":
-		v.OrderedSlice = algorithms.QuickSort(v.ArgumentToFunc)
-	case "radix":
-		v.OrderedSlice = algorithms.RadixSort(v.ArgumentToFunc, len(v.ArgumentToFunc))
-	case "selection":
-		v.OrderedSlice = algorithms.SelectionSort(v.ArgumentToFunc)
-	case "shell":
-		v.OrderedSlice = algorithms.ShellSort(v.ArgumentToFunc)
-	}
-
-	v.SortDuration = time.Since(v.StartTime)
-
-	fmt.Printf("sort [%s]: processed in [%+v]\n", v.AlgorithmName, v.SortDuration)
-
-	semaphore <- true
 }
 
 func validateSortInfo(si SortInfo, semaphore chan bool) {
